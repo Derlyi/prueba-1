@@ -1,10 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
-
-# Create your views here.
-
+from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from shop.models import Product
-
 from .cart import Cart
 from .forms import CartAddProductForm
 
@@ -21,7 +18,7 @@ def cart_add(request, product_id):
             quantity=cd['quantity'],
             override_quantity=cd['override'],
         )
-    return redirect('cart:cart_detail')
+    return JsonResponse({'success': True, 'message': 'Producto añadido al carrito'})
 
 @require_POST
 def cart_remove(request, product_id):

@@ -17,7 +17,8 @@
   </ul>
 </nav>
 
-
+<!-- Contenedor para mensajes -->
+<div id="message" class="alert alert-success" style="display: none;"></div>
 
 <!-- slider -->
 <div class="container">
@@ -57,8 +58,7 @@
 
               <div class="d-flex justify-content-center align-items-center mt-4">
               
-                <form action="{% url 'cart:cart_add' product.id %}" method="post" class="me-2">
-                 
+                <form action="{% url 'cart:cart_add' product.id %}" method="post" class="add-to-cart-form me-2">
                   {% csrf_token %}
                   <button type="submit" class="btn" value="Agregar al carrito" style="background-color: #34DD78; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: auto;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" fill="#4E50B4" class="bi bi-cart4" viewBox="0 0 16 16">
@@ -88,8 +88,6 @@
     {% endif %}
   </div>
 </div>
-
-
 
 <!-- Card de cada producto -->
 
@@ -154,5 +152,28 @@
 
 </footer>
 <!-- Footer -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.add-to-cart-form').on('submit', function(e) {
+            e.preventDefault(); // Evitar el envío normal del formulario
+
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function(response) {
+                    // Mostrar un mensaje de éxito al usuario
+                    $('#message').text('Su producto se ha añadido al carrito correctamente.').show().fadeOut(3000);
+                },
+                error: function(xhr, errmsg, err) {
+                    // Mostrar un mensaje de error al usuario
+                    $('#message').text('Error al añadir al carrito').show().fadeOut(3000);
+                }
+            });
+        });
+    });
+</script>
 
 {% endblock %}
